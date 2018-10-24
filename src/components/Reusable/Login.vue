@@ -63,7 +63,7 @@ export default {
     login: function () {
       this.errors = []
       this.$store.commit('LOGIN')
-      this.axios.post('http://localhost:4000/api/login', this.user)
+      this.axios.post(`${process.env.BACKEND_URL}/api/login`, this.user)
         .then((response) => {
           this.$store.commit('LOGIN_SUCCESS', response.data.user)
           localStorage.setItem('user', JSON.stringify(response.data.user))

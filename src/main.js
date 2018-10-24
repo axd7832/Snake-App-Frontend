@@ -11,7 +11,7 @@ import socket from 'socket.io-client'
 import sockets from './sockets'
 import 'bulma/css/bulma.css'
 
-Vue.config.productionTip = false
+// TODO: Figure out how to move this logic elsewhere
 var storageToken
 if (localStorage.getItem('user') !== null) {
   console.log(localStorage.getItem('user'))
@@ -19,11 +19,10 @@ if (localStorage.getItem('user') !== null) {
 } else {
   storageToken = ''
 }
-Vue.use(VueAxios, axios)
-Vue.use(VueSocket, socket('http://localhost:4001', {
+Vue.use(VueSocket, socket(process.env.BACKEND_URL, {
   query: {token: storageToken}
 }), store)
-
+Vue.use(VueAxios, axios)
 // router has to be before the app is mounted....
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page

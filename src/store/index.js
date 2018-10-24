@@ -20,6 +20,7 @@ const defaults = {
 }
 export default new Vuex.Store({
   state: Object.assign({}, defaults),
+  // Synchronous state changes
   mutations: {
     [LOGIN] (state) {
       state.isLoading = true
@@ -77,6 +78,7 @@ export default new Vuex.Store({
       return state.user
     }
   },
+  // Actions in VueX can be async
   actions: {
     sendMessage ({commit}, message) {
       vm.$socket.emit('SEND_MESSAGE', message)
