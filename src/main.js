@@ -20,7 +20,7 @@ if (localStorage.getItem('user') !== null) {
   storageToken = ''
 }
 Vue.use(VueAxios, axios)
-Vue.use(VueSocket, socket('http://localhost:4001', {
+Vue.use(VueSocket, socket(process.env.BACKEND_URL, {
   query: {token: storageToken}
 }), store)
 
