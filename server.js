@@ -7,12 +7,10 @@ var history = require('connect-history-api-fallback')
 const app = express()
 // create middleware to handle serving the app
 app.use(history())
-console.log(path.join(__dirname, 'dist'))
-console.log(path.join(__dirname, '/dist/index.html'))
 app.use(serveStatic(path.join(__dirname, 'dist')))
 // Catch all routes and redirect to the index file (Using vue-router history)
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, '/dist/index.html'))
+  res.sendFile(path.join(__dirname, 'dist/index.html'))
 })
 // Create default port to serve the app on
 const port = process.env.PORT || 5000
