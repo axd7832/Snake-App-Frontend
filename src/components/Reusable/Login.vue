@@ -89,11 +89,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @MEDIA (min-width: 768px) {
+  /* @MEDIA (min-width: 768px) {
     .has-top-spacer{
       padding-top: 20vh;
     }
-  }
+  } */
   .bg-img:before{
     content: "";
     position: fixed;
