@@ -12,8 +12,9 @@ app.use(history())
 
 app.use(express.static(`${__dirname}/dist/`))
 // Catch all routes and redirect to the index file (Using vue-router history)
-app.get('/.*/', function (req, res) {
-  res.sendfile(path.join(`${__dirname}/dist/index.html`))
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(`${__dirname}/dist/index.html`))
 })
 app.listen(port)
 // Log to feedback that this is actually running

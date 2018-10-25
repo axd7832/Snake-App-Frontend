@@ -77,7 +77,7 @@ export default {
       // TODO get the global API URL
       this.errors = []
       if (this.validateForm()) {
-        this.axios.post('http://localhost:4000/api/register', {
+        this.axios.post(process.env.BACKEND_URL, {
           username: this.newUser.username,
           password: this.newUser.password
         })
