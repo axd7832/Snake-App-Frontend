@@ -39,19 +39,28 @@ export default {
   },
   methods: {
     sendMessage: function () {
+      console.log({username: this.$store.getters.currentUser.username, messageText: this.chatText})
       this.$store.dispatch('sendMessage', {username: this.$store.getters.currentUser.username, messageText: this.chatText})
       this.chatText = ''
     }
   },
   computed: {
     currentChatRoom () {
+      // clear the chat on room change
+      // eslint-disable-next-line
+      this.messages = []
       return this.$store.getters.currentChatRoom
     }
   },
   mounted: function () {
     this.$options.sockets.message = (message) => {
       this.messages.push(message)
+      // TODO: scroll to bottom of the chat when a new message is received
     }
+  },
+  updated: function () {
+    var elem = document.getElementById('chatMessages')
+    elem.scrollTop = elem.scrollHeight - elem.clientHeight
   }
 }
 </script>

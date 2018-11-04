@@ -31,6 +31,8 @@ router.beforeEach((to, from, next) => {
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')
   if (authRequired && !loggedIn) {
+    // This redirectes back to login on mobile
+    // FIX this
     return next('/Login')
   } else {
     next()

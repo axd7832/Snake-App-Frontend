@@ -80,6 +80,16 @@ export default new Vuex.Store({
   actions: {
     sendMessage ({commit}, message) {
       vm.$socket.emit('SEND_MESSAGE', message)
+    },
+    createLobby () {
+      vm.$socket.emit('CREATE_LOBBY')
+    },
+    invitePlayer ({commit}, username) {
+      vm.$socket.emit('invitePlayer', username)
+    },
+    inviteResponse ({commit}, response) {
+      console.log('invite response')
+      vm.$socket.emit('inviteResponse', response)
     }
   }
 })

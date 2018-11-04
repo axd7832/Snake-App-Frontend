@@ -4,7 +4,7 @@
       <div class="navbar-brand">
         <router-link tag="a" to="/Home">
           <a class="navbar-item" href="https://bulma.io">
-          <h4 class="title is-4">Final App Name</h4>
+          <h4 class="title is-4">2p Snake.io</h4>
           </a>
         </router-link>
 
