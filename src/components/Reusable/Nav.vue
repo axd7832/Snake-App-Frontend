@@ -18,6 +18,9 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
+            <a @click="showOnlineUsersModal" class="button is-light">
+              Invite
+            </a>
             <a v-if="isLoggedIn" @click="logout" class="button is-light">
               Log Out
             </a>
@@ -41,6 +44,10 @@ export default {
     logout: function () {
       this.$store.commit('LOGOUT')
       this.$router.push('/Login')
+    },
+    showOnlineUsersModal: function () {
+      this.$store.commit('TOGGLE_SHOW_PLAYERS')
+      this.$store.dispatch('getOnlinePlayers')
     }
   },
   computed: {

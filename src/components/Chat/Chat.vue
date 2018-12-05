@@ -98,7 +98,7 @@ export default {
     color: rgb(105, 105, 105)
   }
   hr.messageHr {
-      border-top: 1px solid #8c8b8b;
-      margin: .5rem 0;
+    border-top: 1px solid #8c8b8b;
+    margin: .5rem 0;
   }
 </style>

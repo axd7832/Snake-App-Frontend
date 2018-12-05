@@ -8,10 +8,13 @@ const LOGIN = 'LOGIN'
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 const LOGIN_FAILURE = 'LOGIN_FAILURE'
 const LOGOUT = 'LOGOUT'
+const TOGGLE_SHOW_PLAYERS = 'TOGGLE_SHOW_PLAYERS'
+
 const defaults = {
   isLoggedIn: !!localStorage.getItem('user') || false,
   user: JSON.parse(localStorage.getItem('user')) || null,
   isLoading: false,
+  showOnlinePlayers: false,
   socket: {
     connected: false,
     currentRoom: 'Room -1',
@@ -37,13 +40,16 @@ export default new Vuex.Store({
     [LOGOUT] (state) {
       state.isLoggedIn = false
       state.user = null
+      state.showOnlinePlayers = false
       localStorage.removeItem('user')
-      console.log(defaults.socket)
       state.socket = {
         connected: false,
         currentRoom: 'Room -1',
         error: false
       }
+    },
+    [TOGGLE_SHOW_PLAYERS] (state) {
+      state.showOnlinePlayers = !state.showOnlinePlayers
     },
     // TODO: Move to Socket Store
     SOCKET_CONNECT (state) {
@@ -75,11 +81,17 @@ export default new Vuex.Store({
     },
     currentUser: state => {
       return state.user
+    },
+    showOnlinePlayers: state => {
+      return state.showOnlinePlayers
     }
   },
   actions: {
     sendMessage ({commit}, message) {
       vm.$socket.emit('SEND_MESSAGE', message)
+    },
+    sendGameCommand ({commit}, gameCommand) {
+      vm.$socket.emit('GAME_COMMAND', gameCommand)
     },
     createLobby () {
       vm.$socket.emit('CREATE_LOBBY')
@@ -90,6 +102,12 @@ export default new Vuex.Store({
     inviteResponse ({commit}, response) {
       console.log('invite response')
       vm.$socket.emit('inviteResponse', response)
+    },
+    getOnlinePlayers () {
+      vm.$socket.emit('getOnlinePlayers')
+    },
+    readyUp ({state}) {
+      vm.$socket.emit('GAME_READY_UP', state.socket.currentRoom)
     }
   }
 })

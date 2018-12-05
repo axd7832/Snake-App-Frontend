@@ -11,6 +11,9 @@ import socket from 'socket.io-client'
 import sockets from './sockets'
 import 'bulma/css/bulma.css'
 
+const $ = require('jquery')
+window.$ = $
+
 Vue.config.productionTip = false
 var storageToken
 if (localStorage.getItem('user') !== null) {

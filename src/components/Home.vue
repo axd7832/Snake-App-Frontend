@@ -3,6 +3,7 @@
       <Game></Game>
       <Chat></Chat>
       <InviteModal></InviteModal>
+      <PlayersModal></PlayersModal>
   </div>
 </template>
 
@@ -10,13 +11,15 @@
 import Game from '@/components/Game/Game.vue'
 import Chat from '@/components/Chat/Chat.vue'
 import InviteModal from '@/components/Game/InviteModal'
+import PlayersModal from '@/components/Game/PlayersModal'
 
 export default {
   name: 'Home',
   components: {
     Game,
+    Chat,
     InviteModal,
-    Chat
+    PlayersModal
   }
 }
 </script>
