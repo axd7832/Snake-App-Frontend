@@ -1,13 +1,16 @@
 <template>
   <div id="gameContainer" @keyup="keyPress($event)">
-    <button @click="createLobby">Create Lobby</button>
-    <button @click="readyUp">Ready Up</button>
-
-    <!-- <div v-html="gameBoardSvg"></div> -->
+    <span>Score: {{score}}</span>
     <div id="gameBoard">
-
+      <div id="boardOverlay" v-if="showOverlay">
+        <div id="boardOverlayCentered">
+          <a v-if="showReadyButton" @click="readyUp" class="button is-success">Ready Up</a>
+          <div>
+            <span v-if="!gameStarted" id="gameStatusText">{{gameStatus}}</span>
+          </div>
+        </div>
     </div>
-    <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100% 100%"></svg> -->
+    </div>
   </div>
 </template>
 
@@ -17,18 +20,19 @@ export default {
   name: 'Game',
   data: function () {
     return {
-      gameStarted: true,
+      gameStarted: false,
       userInputDirection: '',
-      snakeArr:[],
-      foodLoc:{}
+      snakeArr: [],
+      foodLoc: {},
+      score: 0,
+      gameStatus: '',
+      showReadyButton: false
     }
   },
   methods: {
-    createLobby: function () {
-      this.$store.dispatch('createLobby')
-    },
     readyUp: function () {
       this.$store.dispatch('readyUp')
+      this.gameStatus = 'Awaiting Other Player...'
     },
     // creates the SVG bounds for the board
     drawSVG () {
@@ -49,38 +53,12 @@ export default {
         }
       }
     },
-    // used to either update the snake or to toggle cells to translucent
-    // compare the two arrays for differences to determine the minimum changes needed
-    // in a perfect world only the head and tail should change, and another tail added if a food is eatten
     paintSnake (currentSnakeArr, newSnakeArr) {
-      // check the tail of the new snake to see if it is should be removed
-      let currentSnakeTail = {} 
-      if (currentSnakeArr.length === 0) {
-        currentSnakeTail = currentSnakeArr[currentSnakeArr.length]
-      } else {
-        currentSnakeTail = currentSnakeArr[currentSnakeArr.length - 1]
+      for (let body of currentSnakeArr) {
+        this.paintCell(body.x, body.y, 'translucent')
       }
-
-      let newSnakeTail = {}
-      if (newSnakeArr === 0) {
-        newSnakeArr = newSnakeArr[newSnakeArr.length]
-      } else {
-        newSnakeArr[newSnakeArr.length - 1] 
-      }
-      console.log(currentSnakeTail)
-      console.log(newSnakeTail)
-      if (currentSnakeArr.length !== 0) {
-        if (newSnakeTail.x !== currentSnakeTail.x || newSnakeTail.y !== currentSnakeTail.y) {
-          this.paintCell(currentSnakeTail.x, currentSnakeTail.y, 'translucent')
-        }
-      }
-      console.log(newSnakeArr)
-      for (var body of newSnakeArr) {
-        if (body.head === true) {
-          this.paintCell(body.x, body.y, 'red')
-        } else {
-          this.paintCell(body.x, body.y, 'white')
-        }
+      for (let body of newSnakeArr) {
+        this.paintCell(body.x, body.y, 'red')
       }
     },
     paintFood (currentFood, newFood) {
@@ -103,14 +81,9 @@ export default {
       window.$(circle).attr('id', (Math.floor(x / 10) + 1) + '-' + (Math.floor(y / 10) + 1))
       window.$('#board0').append(circle)
     },
-    sendUserInputs () {
-      if (this.gameStarted === true) {
-        console.log("SENDING")
-        setInterval(() => {
-          // send the update to the server after an interval
-            this.$store.dispatch('sendGameCommand', {roomId: this.currentChatRoom, userInputDirection: this.userInputDirection})
-        }, 1000)
-      }
+    showOverlay () {
+      if (this.gameStarted === false || this.showReadyButton === true) return true
+      else return false
     }
   },
   created () {
@@ -137,11 +110,12 @@ export default {
             console.log('INPUT:  D')
             this.userInputDirection = 'RIGHT'
           }
+          this.$store.dispatch('sendGameCommand', {roomId: this.currentChatRoom, userInputDirection: this.userInputDirection})
         }
       }
     })
   },
-  computed :{
+  computed: {
     currentChatRoom () {
       // clear the chat on room change
       // eslint-disable-next-line
@@ -150,24 +124,31 @@ export default {
   },
   mounted () {
     this.drawSVG()
-    this.sendUserInputs()
     this.$options.sockets.GAME_UPDATE = (updateObject) => {
       console.log(updateObject)
       if (updateObject) {
         // listen for commands
-        this.gameStarted = true
-        this.paintFood(this.foodLoc,updateObject.foodLoc)
+        this.paintFood(this.foodLoc, updateObject.foodLoc)
         this.foodLoc = updateObject.foodLoc
+        this.score = updateObject.score
+        var tempGameStatus = updateObject.gameStatus
+        if (tempGameStatus === 'Awaiting Ready Up') {
+          this.gameStarted = false
+          this.showReadyButton = true
+          this.gameStatus = 'Waiting for both players to Ready Up...'
+        } else if (tempGameStatus === 'Active') {
+          this.gameStatus = 'Game Active'
+          this.showReadyButton = false
+          this.gameStarted = true
+        } else if (tempGameStatus === 'Completed') {
+          this.gameStatus = 'Game Over'
+          this.gameStarted = false
+        }
         // currentSnake, newSnake
-        this.paintSnake(this.snakeArr,updateObject.snakeArr, )
+        this.paintSnake(this.snakeArr, updateObject.snakeArr)
         this.snakeArr = updateObject.snakeArr
-        
       }
     }
-  },
-  keyPress (event) {
-    console.log('key press called')
-    console.log(event)
   }
 }
 </script>
@@ -178,9 +159,21 @@ export default {
       min-height: 58vh;
       padding: 10px;
     }
-    /* #gameBoard {
-      min-width: 100%;
-      min-height: 55vh;
-      background: #000;
-    } */
+    #gameBoard {
+      width: fit-content;
+      position: relative;
+    }
+    #boardOverlay {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+    #boardOverlayCentered {
+      position: absolute;
+      top: 50%;
+      left: 40%;
+    }
+    #gameStatusText {
+      color: white;
+    }
 </style>

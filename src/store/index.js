@@ -93,9 +93,6 @@ export default new Vuex.Store({
     sendGameCommand ({commit}, gameCommand) {
       vm.$socket.emit('GAME_COMMAND', gameCommand)
     },
-    createLobby () {
-      vm.$socket.emit('CREATE_LOBBY')
-    },
     invitePlayer ({commit}, username) {
       vm.$socket.emit('invitePlayer', username)
     },
