@@ -101,4 +101,7 @@ export default {
     border-top: 1px solid #8c8b8b;
     margin: .5rem 0;
   }
+  .button.is-info{
+    background-color: #42a5f5;
+  }
 </style>

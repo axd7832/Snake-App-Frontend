@@ -17,7 +17,6 @@ window.$ = $
 Vue.config.productionTip = false
 var storageToken
 if (localStorage.getItem('user') !== null) {
-  console.log(localStorage.getItem('user'))
   storageToken = JSON.parse(localStorage.getItem('user')).token
 } else {
   storageToken = ''
@@ -34,8 +33,6 @@ router.beforeEach((to, from, next) => {
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')
   if (authRequired && !loggedIn) {
-    // This redirectes back to login on mobile
-    // FIX this
     return next('/Login')
   } else {
     next()

@@ -1,3 +1,9 @@
+/**
+ * This file is the shared state for the entire application
+ * Each of the Components must send/recieve data through this central state
+ * Sends Commands to the WS when components request
+ * Listens for Evenets from the WS and updates data accordingly
+ * */
 import Vuex from 'vuex'
 import Vue from 'vue'
 import vm from '@/main.js'
@@ -9,17 +15,21 @@ const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 const LOGIN_FAILURE = 'LOGIN_FAILURE'
 const LOGOUT = 'LOGOUT'
 const TOGGLE_SHOW_PLAYERS = 'TOGGLE_SHOW_PLAYERS'
+const TOGGLE_LEADERBOARDS = 'TOGGLE_LEADERBOARDS'
+const RELOAD_ONCE = 'RELOAD_ONCE'
 
 const defaults = {
   isLoggedIn: !!localStorage.getItem('user') || false,
   user: JSON.parse(localStorage.getItem('user')) || null,
   isLoading: false,
   showOnlinePlayers: false,
+  showLeaderboards: false,
   socket: {
     connected: false,
     currentRoom: 'Room -1',
     error: false
-  }
+  },
+  initReload: localStorage.getItem('initReload') || true
 }
 export default new Vuex.Store({
   state: Object.assign({}, defaults),
@@ -31,7 +41,10 @@ export default new Vuex.Store({
       state.isLoggedIn = true
       state.isLoading = false
       state.user = data
-      if (state.socket.connected === false) location.reload()
+      // state.initReload = false
+      // TODO: Figure out how to init the socket
+      // Reload is needed right now to start the websocket...
+      // if (state.socket.connected === false) location.reload()
     },
     [LOGIN_FAILURE] (state) {
       state.isLoggedIn = false
@@ -41,7 +54,10 @@ export default new Vuex.Store({
       state.isLoggedIn = false
       state.user = null
       state.showOnlinePlayers = false
+      state.showLeaderboards = false
       localStorage.removeItem('user')
+      localStorage.removeItem('initReload')
+      state.initReload = true
       state.socket = {
         connected: false,
         currentRoom: 'Room -1',
@@ -50,6 +66,9 @@ export default new Vuex.Store({
     },
     [TOGGLE_SHOW_PLAYERS] (state) {
       state.showOnlinePlayers = !state.showOnlinePlayers
+    },
+    [TOGGLE_LEADERBOARDS] (state) {
+      state.showLeaderboards = !state.showLeaderboards
     },
     // TODO: Move to Socket Store
     SOCKET_CONNECT (state) {
@@ -63,6 +82,10 @@ export default new Vuex.Store({
     },
     SOCKET_ERROR (state, message) {
       state.socket.error = message.error
+    },
+    RELOAD_ONCE (state) {
+      state.initReload = false
+      localStorage.setItem('initReload', false)
     }
   },
   getters: {
@@ -84,6 +107,12 @@ export default new Vuex.Store({
     },
     showOnlinePlayers: state => {
       return state.showOnlinePlayers
+    },
+    showLeaderboards: state => {
+      return state.showLeaderboards
+    },
+    getInitReload: state => {
+      return state.initReload
     }
   },
   actions: {
@@ -97,14 +126,22 @@ export default new Vuex.Store({
       vm.$socket.emit('invitePlayer', username)
     },
     inviteResponse ({commit}, response) {
-      console.log('invite response')
       vm.$socket.emit('inviteResponse', response)
+    },
+    playAgain ({commit}, roomId) {
+      vm.$socket.emit('PLAY_AGAIN', roomId)
     },
     getOnlinePlayers () {
       vm.$socket.emit('getOnlinePlayers')
     },
+    getLeaderboards () {
+      vm.$socket.emit('getLeaderboards')
+    },
     readyUp ({state}) {
       vm.$socket.emit('GAME_READY_UP', state.socket.currentRoom)
+    },
+    setReload ({state, commit}) {
+      commit(RELOAD_ONCE)
     }
   }
 })

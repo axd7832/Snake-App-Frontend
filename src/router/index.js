@@ -9,6 +9,7 @@ export default new Router({
   routes: [
     {path: '/Login', component: Login},
     {path: '/SignUp', component: SignUp},
+    {path: '/Home', component: Home, params: true},
     {path: '/', component: Home},
     {path: '**', component: Home}
   ]

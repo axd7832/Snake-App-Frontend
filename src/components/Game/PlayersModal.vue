@@ -9,7 +9,9 @@
           </header>
           <section class="modal-card-body">
             <ul>
-              <li @click="invitePlayer(player)" v-bind:key="player" v-for="player in currentOnlinePlayers">{{player}}</li>
+              <li @click="invitePlayer(player)" v-bind:key="player" v-for="player in currentOnlinePlayers">
+                <span class="usernameText">{{player}}</span>
+                <a class="button is-info">Invite</a></li>
             </ul>
           </section>
           <footer class="modal-card-foot">
@@ -55,5 +57,11 @@ export default {
 <style scoped>
     #gameContainer {
         min-height: 58vh;
+    }
+    li:not(:last-child){
+      margin-bottom: 10px;
+    }
+    .usernameText {
+      font-size: 1.2em;
     }
 </style>
