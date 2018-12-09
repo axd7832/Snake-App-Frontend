@@ -102,6 +102,6 @@ export default {
     margin: .5rem 0;
   }
   .button.is-info{
-    background-color: #42a5f5;
+    background-color: #42a5f5 !important;
   }
 </style>

@@ -71,9 +71,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .navbar {
-    background-color: #42a5f5;
+    background-color: #42a5f5 !important;
   }
   .navbar-burger span {
-    background-color: #0077c2;
+    background-color: #0077c2 !important;
   }
 </style>
