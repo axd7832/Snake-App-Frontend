@@ -33,17 +33,17 @@ export default {
       this.modalActive = false
       this.inviteUsername = ''
     },
+    // sends the invite response
+    // dismisses the modal
     respondToInvite: function (response) {
-      // send response to socket
-      console.log(this.inviteUsername)
       this.$store.dispatch('inviteResponse', {answer: response, inviteeUsername: this.inviteUsername})
       this.dismissModal()
       this.inviteUsername = ''
     }
   },
+  // when the component is created- listen for the gameInvite event from the WS
   created: function () {
     this.$options.sockets.gameInvite = (data) => {
-      console.log(data)
       this.inviteUsername = data
       this.modalActive = true
     }
@@ -51,7 +51,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     #gameContainer {
         min-height: 58vh;

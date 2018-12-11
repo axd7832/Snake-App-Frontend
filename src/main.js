@@ -11,6 +11,7 @@ import socket from 'socket.io-client'
 import sockets from './sockets'
 import 'bulma/css/bulma.css'
 
+// adds jQuery to the window to be used throughout the app.
 const $ = require('jquery')
 window.$ = $
 
@@ -21,12 +22,14 @@ if (localStorage.getItem('user') !== null) {
 } else {
   storageToken = ''
 }
+// This is where the Socket is initialized with Vue
 Vue.use(VueAxios, axios)
 Vue.use(VueSocket, socket(process.env.BACKEND_URL, {
   query: {token: storageToken}
 }), store)
 
 // router has to be before the app is mounted....
+// Restricts not authed users will be routed back to the Login Screen
 router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/Login', '/Signup']

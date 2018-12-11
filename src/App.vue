@@ -12,6 +12,7 @@ import SignUp from '@/components/Reusable/SignUp.vue'
 import Nav from '@/components/Reusable/Nav.vue'
 export default {
   name: 'app',
+  // Initialize the components that are going to be used in the application.
   components: {
     Home,
     Login,

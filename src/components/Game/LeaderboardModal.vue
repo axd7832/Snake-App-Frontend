@@ -42,26 +42,26 @@ export default {
     }
   },
   methods: {
+    // toggles the leaderboard modal
     dismissModal: function () {
       this.$store.commit('TOGGLE_LEADERBOARDS')
     }
   },
   computed: {
+    // checks to see if the modal is active
     isModalActive () {
       return this.$store.getters.showLeaderboards
     }
   },
   created: function () {
+    // listens for the socket to emit the current leaderboards
     this.$options.sockets.currentLeaderboards = (data) => {
       this.highscorePlayers = data
-      // this.inviteUsername = data
-      // this.modalActive = true
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     #gameContainer {
         min-height: 58vh;

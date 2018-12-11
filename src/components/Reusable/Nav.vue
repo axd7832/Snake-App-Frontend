@@ -44,15 +44,21 @@ export default {
   },
   methods: {
     logout: function () {
+      // Send the event to the central state of the application
       this.$store.commit('LOGOUT')
+      // pushes the Login screen to the user
       this.$router.push('/Login')
     },
     showOnlineUsersModal: function () {
+      // Tells the central state to show the online users modal
       this.$store.commit('TOGGLE_SHOW_PLAYERS')
+      // Sends the command the state to perform a request for the online users
       this.$store.dispatch('getOnlinePlayers')
     },
     showLeaderboardModal: function () {
+      // Tells the central state to show the leaderboards modal
       this.$store.commit('TOGGLE_LEADERBOARDS')
+      // Sens teh command to state to perform a request for the leaderboards data
       this.$store.dispatch('getLeaderboards')
     },
     // Reset the board, kick back to main lobby
@@ -60,6 +66,7 @@ export default {
       window.location.reload()
     }
   },
+  // constantly updates, checks for the most current value of isLoggedIn from the state
   computed: {
     isLoggedIn () {
       return this.$store.getters.isLoggedIn

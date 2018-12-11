@@ -104,7 +104,6 @@ export default {
   },
   computed: {
     isLoading () {
-      console.log(this.$store.getters.isLoading)
       return this.$store.getters.isLoading
     }
   }

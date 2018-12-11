@@ -38,8 +38,9 @@ export default {
     }
   },
   methods: {
+    // sends the data from the message to the store to emit the message to the WS
+    // clears the input field
     sendMessage: function () {
-      console.log({username: this.$store.getters.currentUser.username, messageText: this.chatText})
       this.$store.dispatch('sendMessage', {username: this.$store.getters.currentUser.username, messageText: this.chatText})
       this.chatText = ''
     }
@@ -55,7 +56,6 @@ export default {
   mounted: function () {
     this.$options.sockets.message = (message) => {
       this.messages.push(message)
-      // TODO: scroll to bottom of the chat when a new message is received
     }
   },
   updated: function () {
@@ -65,7 +65,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   #chatContainer {
     height: 34vh;
@@ -81,9 +80,6 @@ export default {
     background-color: white;
     overflow: auto;
   }
-  /* #chatSendMessage {
-
-  } */
   #chatMessages, #chatSendMessage {
     border: 1px solid rgb(49, 113, 211);
     border-width: 0px 1px 1px 1px;

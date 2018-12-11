@@ -18,6 +18,7 @@ const TOGGLE_SHOW_PLAYERS = 'TOGGLE_SHOW_PLAYERS'
 const TOGGLE_LEADERBOARDS = 'TOGGLE_LEADERBOARDS'
 const RELOAD_ONCE = 'RELOAD_ONCE'
 
+// Deafults for the application
 const defaults = {
   isLoggedIn: !!localStorage.getItem('user') || false,
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -31,6 +32,11 @@ const defaults = {
   },
   initReload: localStorage.getItem('initReload') || true
 }
+
+// This is the central state for the entire app.
+// These mutations are directly linked to server emit messages.
+// Performs tasks to the state directly.
+// Note: mutations are synchronous
 export default new Vuex.Store({
   state: Object.assign({}, defaults),
   mutations: {
@@ -41,10 +47,6 @@ export default new Vuex.Store({
       state.isLoggedIn = true
       state.isLoading = false
       state.user = data
-      // state.initReload = false
-      // TODO: Figure out how to init the socket
-      // Reload is needed right now to start the websocket...
-      // if (state.socket.connected === false) location.reload()
     },
     [LOGIN_FAILURE] (state) {
       state.isLoggedIn = false
@@ -115,6 +117,7 @@ export default new Vuex.Store({
       return state.initReload
     }
   },
+  // These are the websocket events that are fired off to the WS
   actions: {
     sendMessage ({commit}, message) {
       vm.$socket.emit('SEND_MESSAGE', message)

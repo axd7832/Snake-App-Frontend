@@ -47,6 +47,7 @@ export default {
     readyUp: function () {
       this.$store.dispatch('readyUp')
       this.gameStatus = 'Awaiting Other Player...'
+      this.showReadyButton = false
     },
     // creates the SVG bounds for the board
     drawSVG () {
