@@ -12,7 +12,7 @@
           </section>
           <footer class="modal-card-foot">
             <button class="button is-success" @click="respondToInvite(true)">Accept</button>
-            <button class="button" @click="respondToInvite(false)" data-bulma-modal="close">Cancel</button>
+            <button class="button" @click="respondToInvite(false)" data-bulma-modal="close">Deny</button>
           </footer>
         </div>
     </div>
